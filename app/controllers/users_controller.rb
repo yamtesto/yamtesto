@@ -3,6 +3,8 @@ class UsersController < ApplicationController
   # GET /users.xml
   def index
     @users = User.all
+    # test!
+    # Emailer.deliver_confirmation("hc5duke@gmail.com")
 
     respond_to do |format|
       format.html # index.html.erb
