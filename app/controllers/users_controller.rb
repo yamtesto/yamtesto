@@ -1,15 +1,11 @@
 class UsersController < ApplicationController
+  before_filter :check_logged_in, :except => [:new, :login]
   # GET /users
   # GET /users.xml
   def index
-    @users = User.all
     # test!
     # Emailer.deliver_confirmation("hc5duke@gmail.com")
 
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @users }
-    end
   end
 
   # GET /users/1
@@ -81,5 +77,13 @@ class UsersController < ApplicationController
       format.html { redirect_to(users_url) }
       format.xml  { head :ok }
     end
+  end
+
+  def login
+  end
+
+  private
+  def check_logged_in
+    redirect_to :action => "new" unless logged_in?
   end
 end

@@ -7,4 +7,16 @@ class ApplicationController < ActionController::Base
 
   # Scrub sensitive parameters from your log
   filter_parameter_logging :password
+  def logged_in?
+    begin
+      uid = session[:user_id].to_i
+      key = session[:session_key]
+      return false unless uid && key
+      # logged in & match key?
+      user = User.find(uid)
+      user.session_key && (user.session_key == key)
+    rescue
+      false
+    end
+  end
 end
