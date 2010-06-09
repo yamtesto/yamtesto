@@ -36,6 +36,7 @@ describe UsersController do
       @user = User.make(:first_name => Faker::Name.first_name,
           :last_name => Faker::Name.last_name,
           :password => "password")
+      @user.complete_activation!
       login_as @user
       get :register
       response.should redirect_to edit_user_path(@user)
@@ -86,8 +87,7 @@ describe UsersController do
       session[:user_id].should be_nil
       session[:session_key].should be_nil
 
-      response.should_not be_success
-      response.should_not be_redirect
+      response.should be_redirect
     end
   end
 
@@ -96,7 +96,7 @@ describe UsersController do
       user = User.make
       company = Faker::Company.name
       title = Faker::Company.catch_phrase
-      
+
       login_as user
       post :add_job, :id => user.id, :job => {:title => title, :company => company}
       response.should redirect_to(edit_user_path(user.id))
@@ -110,7 +110,7 @@ describe UsersController do
       user = User.make
       company = Faker::Company.name
       title = Faker::Company.catch_phrase
-      
+
       login_as user
       post :add_job, :id => user.id, :job => {:title => title, :company => ""}
       response.should_not be_success
@@ -135,7 +135,7 @@ describe UsersController do
 
       login_as user
       post :edit_job, :id => user.id, :job => {:id => job.id, :title => new_title, :company => same_company}
-      response.should be_success
+      response.should redirect_to(edit_user_path(user))
 
       user = User.find(user.id)
       user.jobs.length.should == 1

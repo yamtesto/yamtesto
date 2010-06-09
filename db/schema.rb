@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(:version => 20100609150921) do
 
   create_table "users", :force => true do |t|
     t.string   "email"
-    t.boolean  "activated"
     t.string   "first_name"
     t.string   "last_name"
     t.string   "password"
@@ -41,6 +40,7 @@ ActiveRecord::Schema.define(:version => 20100609150921) do
     t.datetime "updated_at"
     t.string   "session_key"
     t.string   "activation_tag"
+    t.boolean  "activated"
   end
 
 end

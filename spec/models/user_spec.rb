@@ -6,6 +6,7 @@ describe User do
       user = User.create(:email => Faker::Internet.email)
       user.activation_tag.should_not be_nil
       user.activation_tag.should_not == ""
+      user.activated.should == 0
     end
 
     it "missing basic params means you're a noob" do

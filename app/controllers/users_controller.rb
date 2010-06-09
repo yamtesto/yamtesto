@@ -43,13 +43,15 @@ class UsersController < ApplicationController
   # PUT /users/1
   def update
     if @user.update_attributes(params[:user])
-      if @user.birth_date.nil? && @user.location.nil? && @user.jobs.empty?
+      if @user.activation_incomplete?
+        @user.complete_activation! # show this only once
         redirect_to(edit_user_path(@user), :notice => 'Now fill out some more info')
       else
         redirect_to(@user, :notice => 'User was successfully updated.')
       end
     else
-      render :action => "edit"
+      flash[:warning] = "something went wrong!"
+      redirect_to(edit_user_path(@user))
     end
   end
 
@@ -69,7 +71,8 @@ class UsersController < ApplicationController
         session[:session_key] = @user.session_key
         redirect_to register_user_path(@user.id)
       else
-        render :status => 401 # wrong activation tag
+        flash[:warning] = "could not activate"
+        redirect_to :action => "new"
       end
     else
       redirect_to root_url
@@ -89,7 +92,8 @@ class UsersController < ApplicationController
     if authenticate(@user, password)
       redirect_to users_path
     else
-      render :status => 401 # bad password
+      flash[:warning] = "could not login"
+      redirect_to :action => "new"
     end
   end
 
@@ -139,7 +143,7 @@ class UsersController < ApplicationController
           user.jobs << new_job
           user.jobs.delete(job)
         end
-        redirect_to edit_user_path, :notice => "successfully added new job"
+        redirect_to edit_user_path, :notice => "successfully updated job"
       rescue
         flash[:warning] = "failed to add this job (maybe already in your job history?)"
         redirect_to edit_user_path
