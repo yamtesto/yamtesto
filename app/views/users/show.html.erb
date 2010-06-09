@@ -4,11 +4,6 @@
 </p>
 
 <p>
-  <b>Activated:</b>
-  <%=h @user.activated %>
-</p>
-
-<p>
   <b>First name:</b>
   <%=h @user.first_name %>
 </p>
@@ -16,11 +11,6 @@
 <p>
   <b>Last name:</b>
   <%=h @user.last_name %>
-</p>
-
-<p>
-  <b>Password:</b>
-  <%=h @user.password %>
 </p>
 
 <p>
@@ -33,6 +23,9 @@
   <%=h @user.location %>
 </p>
 
+<%
+#todo: jobs
+%>
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

@@ -14,7 +14,9 @@ class ApplicationController < ActionController::Base
       return false unless uid && key
       # logged in & match key?
       user = User.find(uid)
-      user.session_key && (user.session_key == key)
+      if user.session_key && (user.session_key == key)
+        @logged_in_user = user
+      end
     rescue
       false
     end
