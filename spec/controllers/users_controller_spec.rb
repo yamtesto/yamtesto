@@ -32,6 +32,22 @@ describe UsersController do
       @user.reload.should_not be_activated
     end
 
+    it "should complete registration if name and password are filled out" do
+      @user = User.make(:first_name => Faker::Name.first_name,
+          :last_name => Faker::Name.last_name,
+          :password => "password")
+      login_as @user
+      get :register
+      response.should redirect_to edit_user_path(@user)
+    end
+
+    it "should get user to complete registration if name and password are missing" do
+      @user = User.make(:first_name => Faker::Name.first_name)
+      login_as @user
+      get :edit, :id => @user.id
+      response.should redirect_to register_user_path(@user)
+    end
+
     it "should tell the user to finish registration" do
       @user = User.make
       login_as @user

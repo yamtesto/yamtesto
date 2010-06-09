@@ -20,6 +20,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def noob?
+    self.first_name.nil? || self.last_name.nil? || self.password.nil?
+  end
+
   def digest_password
     self.password = Digest::SHA2.hexdigest(self.password) if self.password
   end

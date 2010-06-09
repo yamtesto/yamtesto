@@ -21,6 +21,7 @@ class UsersController < ApplicationController
 
   # GET /users/1/edit
   def edit
+    redirect_to register_user_path(@user) if @user.noob?
   end
 
   # POST /users
@@ -70,6 +71,7 @@ class UsersController < ApplicationController
   # like edit but simpler
   def register
     @user = @logged_in_user
+    redirect_to edit_user_path(@user) unless @user.noob?
   end
 
   def login

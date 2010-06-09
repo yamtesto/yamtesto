@@ -7,9 +7,14 @@ describe User do
       user.activation_tag.should_not be_nil
       user.activation_tag.should_not == ""
     end
+
+    it "missing basic params means you're a noob" do
+      user = User.create(:email => Faker::Internet.email)
+      user.should be_noob
+    end
   end
 
-  it "should digest password" do
+  it "should digest password on save" do
     password_phrase = "hello"
     user = User.make
     user.password = password_phrase
@@ -24,4 +29,5 @@ describe User do
     user.save
     user.can_has_access?(password_phrase).should be_true
   end
+
 end
