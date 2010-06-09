@@ -1,0 +1,5 @@
+%h1
+  Welcome back
+  = @user.email
+%p= link_to 'edit profile', edit_user_path(@user)
+%p= link_to 'log out', logout_users_path

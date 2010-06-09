@@ -89,7 +89,7 @@ class UsersController < ApplicationController
   def logout
     session[:user_id] = nil
     session[:session_key] = nil
-    render :text => "user logged out"
+    redirect_to root_url
   end
 
   private
