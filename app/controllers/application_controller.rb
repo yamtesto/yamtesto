@@ -19,4 +19,11 @@ class ApplicationController < ActionController::Base
       false
     end
   end
+
+  def authenticate(user, pwd)
+    if user.can_has_access?(pwd)
+      session[:user_id] = user.id
+      session[:session_key] = user.session_key
+    end
+  end
 end

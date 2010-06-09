@@ -5,17 +5,29 @@ class User < ActiveRecord::Base
   validates_presence_of :email
   validates_uniqueness_of :email
   after_create :generate_activation_tag!
+  before_save :digest_password
 
   def generate_activation_tag!
-    activated = false
-    activation_tag = UUIDTools::UUID.timestamp_create().to_s
-    save
+    self.activated = false
+    self.activation_tag = UUIDTools::UUID.timestamp_create().to_s
+    save!
   end
 
   def activate!(tag)
     if activation_tag == tag
       self.activated = true
-      self.save
+      self.save!
+    end
+  end
+
+  def digest_password
+    self.password = Digest::SHA2.hexdigest(self.password) if self.password
+  end
+
+  def can_has_access?(pwd)
+    if Digest::SHA2.hexdigest(pwd) == self.password
+      self.session_key = UUIDTools::UUID.timestamp_create().to_s
+      self.save!
     end
   end
 end

@@ -1,39 +1,31 @@
-<h1>New user</h1>
+<h1>Register</h1>
 
 <% form_for(@user) do |f| %>
   <%= f.error_messages %>
 
   <p>
-    <%= f.label :email %><br />
     <%= f.text_field :email %>
-  </p>
-  <p>
-    <%= f.label :activated %><br />
-    <%= f.check_box :activated %>
-  </p>
-  <p>
-    <%= f.label :first_name %><br />
-    <%= f.text_field :first_name %>
-  </p>
-  <p>
-    <%= f.label :last_name %><br />
-    <%= f.text_field :last_name %>
-  </p>
-  <p>
-    <%= f.label :password %><br />
-    <%= f.text_field :password %>
-  </p>
-  <p>
-    <%= f.label :birth_date %><br />
-    <%= f.text_field :birth_date %>
-  </p>
-  <p>
-    <%= f.label :location %><br />
-    <%= f.text_field :location %>
+    &lt;
+    <%= f.label :email %>
   </p>
   <p>
     <%= f.submit 'Create' %>
   </p>
 <% end %>
 
-<%= link_to 'Back', users_path %>
+<h1>Login</h1>
+<% form_for :user, @user, :url => login_users_path do |f| %>
+  <p>
+    <%= f.text_field :email %>
+    &lt;
+    <%= f.label :email %>
+  </p>
+  <p>
+    <%= f.password_field :password %>
+    &lt;
+    <%= f.label :password %>
+  </p>
+  <p>
+    <%= f.submit 'Log in' %>
+  </p>
+<% end %>

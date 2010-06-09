@@ -95,6 +95,12 @@ class UsersController < ApplicationController
   def login
     redirect_to :action => "new" if params[:user].nil?
     @user = User.find_by_email(params[:user][:email])
+    password = params[:user][:password]
+    if authenticate(@user, password)
+      redirect_to :action => "index"
+    else
+      render :status => 401 # bad password
+    end
   end
 
   private

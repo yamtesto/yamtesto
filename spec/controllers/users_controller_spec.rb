@@ -23,10 +23,22 @@ describe UsersController do
     response.should be_success
     @user.reload.should be_activated
   end
+
   it "should deny activation" do
     @user = User.make
     get :activate, { :id => @user.id, :tag => "#{@user.activation_tag}0000" }
     response.should_not be_success
     @user.reload.should_not be_activated
+  end
+
+  it "should authenticate users" do
+    @user = User.make
+    @user.password = "something"
+    @user.save!
+    get :login, :user => {:email => @user.email, :password => "something"}
+    session[:user_id].should == @user.id
+    session[:session_key].should == @user.reload.session_key
+
+    response.should redirect_to(users_path)
   end
 end
