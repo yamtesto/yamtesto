@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(:version => 20100609052354) do
   end
 
   create_table "jobs_users", :id => false, :force => true do |t|
-    t.integer "user_id"
     t.integer "job_id"
+    t.integer "user_id"
   end
 
   create_table "users", :force => true do |t|
