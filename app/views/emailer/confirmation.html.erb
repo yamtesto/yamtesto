@@ -4,5 +4,5 @@ Please confirm your account by going to
 <%
 path = url_for(:controller => "users", :action => "activate", :id => @user.id, :tag => @user.activation_tag, :only_path => false, :host => @host)
 %>
-<%= link_to path, path %>
-
+<%# link_to path, path %>
+<%= path %>

@@ -1,31 +1,34 @@
-<p>
+<h3>Info:</h3>
+<div>
   <b>Email:</b>
   <%=h @user.email %>
-</p>
+</div>
 
-<p>
+<div>
   <b>First name:</b>
   <%=h @user.first_name %>
-</p>
+</div>
 
-<p>
+<div>
   <b>Last name:</b>
   <%=h @user.last_name %>
-</p>
+</div>
 
-<p>
+<div>
   <b>Birth date:</b>
   <%=h @user.birth_date %>
-</p>
+</div>
 
-<p>
+<div>
   <b>Location:</b>
   <%=h @user.location %>
-</p>
+</div>
 
-<%
-#todo: jobs
-%>
+<h3>Job History:</h3>
+<% @jobs.each do |j| %>
+  <div><b><%=h j.title %></b> @ <b><%=h j.company %></b></div>
+<% end %>
+
 
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>

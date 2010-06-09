@@ -42,7 +42,7 @@ describe UsersController do
     end
 
     it "should get user to complete registration if name and password are missing" do
-      @user = User.make(:first_name => Faker::Name.first_name)
+      @user = User.make(:first_name => "")
       login_as @user
       get :edit, :id => @user.id
       response.should redirect_to register_user_path(@user)
@@ -88,6 +88,59 @@ describe UsersController do
 
       response.should_not be_success
       response.should_not be_redirect
+    end
+  end
+
+  describe "jobs" do
+    it "should add jobs" do
+      user = User.make
+      company = Faker::Company.name
+      title = Faker::Company.catch_phrase
+      
+      login_as user
+      post :add_job, :id => user.id, :job => {:title => title, :company => company}
+      response.should redirect_to(edit_user_path(user.id))
+      user = User.find(user.id)
+      user.jobs.length.should == 1
+      user.jobs.first.title.should == title
+      user.jobs.first.company.should == company
+    end
+
+    it "should only take jobs with title and company" do
+      user = User.make
+      company = Faker::Company.name
+      title = Faker::Company.catch_phrase
+      
+      login_as user
+      post :add_job, :id => user.id, :job => {:title => title, :company => ""}
+      response.should_not be_success
+      user = User.find(user.id)
+      user.jobs.length.should == 0
+    end
+
+    it "should not be able to list two same jobs" do
+      user = User.make
+      job = Job.make
+      user.jobs << job
+      user.jobs << job rescue nil
+      user.jobs.length.should == 1
+    end
+
+    it "should be able to edit jobs" do
+      user = User.make
+      job = Job.make(:title => "peon")
+      user.jobs << job
+      new_title = "CEO"
+      same_company = job.company
+
+      login_as user
+      post :edit_job, :id => user.id, :job => {:id => job.id, :title => new_title, :company => same_company}
+      response.should be_success
+
+      user = User.find(user.id)
+      user.jobs.length.should == 1
+      user.jobs.first.title = new_title
+      user.jobs.first.company = same_company
     end
   end
 end

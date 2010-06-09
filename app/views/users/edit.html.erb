@@ -3,41 +3,56 @@
 <% form_for(@user) do |f| %>
   <%= f.error_messages %>
 
-  <p>
-    <%= f.text_field :email %>
-    &lt;
-    <%= f.label :email %>
+  <div>
+    <%= f.text_field :email %> &lt; <%= f.label :email %>
+  </div>
+  <div>
+    <%= f.text_field :first_name %> &lt; <%= f.label :first_name %>
+  </div>
+  <div>
+    <%= f.text_field :last_name %> &lt; <%= f.label :last_name %>
+  </div>
+  <div>
+    <%= f.text_field :birth_date %> &lt; <%= f.label :birth_date %>
+  </div>
+  <div>
+    <%= f.text_field :location %> &lt; <%= f.label :location %>
+  </div>
+  <div>
+    <%= f.password_field :password, :value => "" %> &lt; <%= f.label :password %>
+  </div>
+ <p>
+    <%= submit_tag "Update" %>
   </p>
-  <p>
-    <%= f.text_field :first_name %>
-    &lt;
-    <%= f.label :first_name %>
-  </p>
-  <p>
-    <%= f.text_field :last_name %>
-    &lt;
-    <%= f.label :last_name %>
-  </p>
-  <p>
-    <%= f.text_field :birth_date %>
-    &lt;
-    <%= f.label :birth_date %>
-  </p>
-  <p>
-    <%= f.text_field :location %>
-    &lt;
-    <%= f.label :location %>
-  </p>
-  <p>
-    <%= f.password_field :password, :value => "" %>
-    <span style="color:red;">
-      &lt;
-      <%= f.label :password %> (* Required)
-    </span>
-  </p>
-  <p>
-    <%= button_to_function "Update", "YamTesto.submitUpdateForm(this)" %>
-  </p>
+<% end %>
+
+<h3>Job History</h3>
+<div id="user_jobs_div">
+  <% @jobs.each do |job| %>
+    <div>
+      <% remote_form_for :job, job, :url => edit_job_user_path, :html => { :method => "post" } do |j| %>
+        <%= j.hidden_field :id %>
+        <%= j.text_field :title %> &lt; <%= j.label :title %>
+        @
+        <%= j.label :company %> &gt; <%= j.text_field :company %>
+        <%= submit_tag "Update" %>
+      <% end %>
+    </div>
+  <% end %>
+  <% if @jobs.empty? %>
+    No jobs in history. add some below:
+  <% end %>
+</div>
+<h3>Add new job:</h3>
+<% remote_form_for :job, @job, :url => add_job_user_path, :html => { :method => "post" } do |j| %>
+  <%= j.text_field :title %>
+  &lt;
+  <%= j.label :title %>
+  @
+  <%= j.label :company %>
+  &gt;
+  <%= j.text_field :company %>
+  <%= submit_tag "+" %>
 <% end %>
 
 <%= link_to 'Show', @user %> |

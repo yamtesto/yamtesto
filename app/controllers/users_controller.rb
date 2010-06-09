@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_filter :check_logged_in, :except => [:new, :create, :login, :activate]
   before_filter :check_owner, :only => [:edit, :update, :destroy]
+
   # GET /users
   def index
     @user = @logged_in_user
@@ -9,16 +10,22 @@ class UsersController < ApplicationController
   # GET /users/1
   def show
     @user = User.find(params[:id])
+    @jobs = @user.get_jobs
   end
 
-  # GET /users/new
+ # GET /users/new
   def new
     @user = User.new
   end
 
   # GET /users/1/edit
   def edit
-    redirect_to register_user_path(@user) if @user.noob?
+    if @user.noob?
+      redirect_to register_user_path(@user)
+    else
+      @job = Job.new
+      @jobs = @user.get_jobs
+    end
   end
 
   # POST /users
@@ -90,6 +97,54 @@ class UsersController < ApplicationController
     session[:user_id] = nil
     session[:session_key] = nil
     redirect_to root_url
+  end
+
+  ### jobs
+  def add_job
+    user = User.find(params[:id])
+    title = params[:job].andand[:title].to_s
+    company = params[:job].andand[:company].to_s
+    if user.nil?
+      flash[:warning] = "who are you again?"
+      redirect_to edit_user_path
+    elsif title.blank? || company.blank?
+      flash[:warning] = "job needs both company and title"
+      redirect_to edit_user_path
+    else
+      begin
+        user.jobs << Job.find_or_create_by_title_and_company(title, company)
+        redirect_to edit_user_path, :notice => "successfully added new job"
+      rescue
+        flash[:warning] = "failed to add this job (maybe already in your job history?)"
+        redirect_to edit_user_path
+      end
+    end
+  end
+
+  def edit_job
+    user = User.find(params[:id])
+    job = Job.find(params[:job].andand[:id])
+    title = params[:job].andand[:title].to_s
+    company = params[:job].andand[:company].to_s
+    if user.nil? || job.nil?
+      flash[:warning] = "who are you again?"
+      redirect_to edit_user_path
+    elsif title.blank? || company.blank?
+      flash[:warning] = "job needs both company and title"
+      redirect_to edit_user_path
+    else
+      begin
+        new_job = Job.find_or_create_by_title_and_company(title, company)
+        if new_job != job
+          user.jobs << new_job
+          user.jobs.delete(job)
+        end
+        redirect_to edit_user_path, :notice => "successfully added new job"
+      rescue
+        flash[:warning] = "failed to add this job (maybe already in your job history?)"
+        redirect_to edit_user_path
+      end
+    end
   end
 
   private

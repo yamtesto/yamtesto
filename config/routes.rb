@@ -1,7 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :users,
     :collection => { :login => :post, :logout => :get },
-    :member => { :activate => :get, :register => :get }
+    :member => { :activate => :get, :register => :get, :add_job => :post, :edit_job => :post}
 
   # The priority is based upon order of creation: first created -> highest priority.
 
