@@ -26,6 +26,6 @@ class ApplicationController < ActionController::Base
     if user.can_has_access?(pwd)
       session[:user_id] = user.id
       session[:session_key] = user.session_key
-    end
+    end rescue nil
   end
 end
