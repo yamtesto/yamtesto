@@ -39,7 +39,7 @@ class UsersController < ApplicationController
   def update
     if @user.update_attributes(params[:user])
       if @user.birth_date.nil? && @user.location.nil? && @user.jobs.empty?
-        redirect_to edit_user_path(@user)
+        redirect_to(edit_user_path(@user), :notice => 'Now fill out some more info')
       else
         redirect_to(@user, :notice => 'User was successfully updated.')
       end

@@ -1,2 +1,11 @@
-// Place your application-specific JavaScript functions and classes here
-// This file is automatically included by javascript_include_tag :defaults
+YamTesto = {
+  submitUpdateForm: function(elem) {
+    var form = $(elem).parents('form');
+    var pwd = form.find('input#user_password');
+    if (pwd.val() == '') {
+      alert('Password field must be filled out to update');
+    } else {
+      form.submit();
+    }
+  }
+};
