@@ -1,12 +1,9 @@
 class UsersController < ApplicationController
-  before_filter :check_logged_in, :except => [:new, :login, :activate]
+  before_filter :check_logged_in, :except => [:new, :create, :login, :activate]
   before_filter :check_owner, :only => [:edit, :update, :destroy]
   # GET /users
   def index
     @user = @logged_in_user
-    # test!
-    # Emailer.deliver_confirmation("hc5duke@gmail.com")
-
   end
 
   # GET /users/1
@@ -29,9 +26,10 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
 
     if @user.save
-      format.html { redirect_to(@user, :notice => 'User was successfully created.') }
+      Emailer.deliver_confirmation(@user)
+      redirect_to(@user, :notice => 'User was successfully created.')
     else
-      format.html { render :action => "new" }
+      render :action => "new"
     end
   end
 
@@ -59,6 +57,9 @@ class UsersController < ApplicationController
       @user = User.find(params[:id])
       if @user.activate!(params[:tag])
         # success!
+        @user.create_session_key!
+        session[:user_id] = @user.id
+        session[:session_key] = @user.session_key
         redirect_to register_user_path(@user.id)
       else
         render :status => 401 # wrong activation tag
@@ -83,6 +84,12 @@ class UsersController < ApplicationController
     else
       render :status => 401 # bad password
     end
+  end
+
+  def logout
+    session[:user_id] = nil
+    session[:session_key] = nil
+    render :text => "user logged out"
   end
 
   private

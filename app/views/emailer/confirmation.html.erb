@@ -1,5 +1,8 @@
-Hi. <%= @name %>
+Hi. <%= @user.email %>
 
 Please confirm your account by going to
-<%= link_to root_path(:only_path => false, :host => @host), root_path %>
+<%
+path = url_for(:controller => "users", :action => "activate", :id => @user.id, :tag => @user.activation_tag, :only_path => false, :host => @host)
+%>
+<%= link_to path, path %>
 

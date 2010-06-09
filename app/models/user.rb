@@ -30,8 +30,12 @@ class User < ActiveRecord::Base
 
   def can_has_access?(pwd)
     if Digest::SHA2.hexdigest(pwd) == self.password
-      self.session_key = UUIDTools::UUID.timestamp_create().to_s
-      self.save!
+      create_session_key!
     end
+  end
+
+  def create_session_key!
+    self.session_key = UUIDTools::UUID.timestamp_create().to_s
+    self.save!
   end
 end

@@ -4,14 +4,19 @@
 -form_for(@user) do |f|
   = f.error_messages
   %p
-    = f.label :first_name
     = f.text_field :first_name
+    &lt;
+    = f.label :first_name
   %p
-    = f.label :last_name
     = f.text_field :last_name
+    &lt;
+    = f.label :last_name
   %p
-    = f.label :password
     = f.password_field :password
+    %span{:style => "color:red;"}
+      &lt;
+      = f.label :password
+      (* Required)
   %p
-    = f.submit 'Update'
+    = button_to_function "Update", "YamTesto.submitUpdateForm(this)"
 
