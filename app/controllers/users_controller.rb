@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :check_logged_in, :except => [:new, :login]
+  before_filter :check_logged_in, :except => [:new, :login, :activate]
   # GET /users
   # GET /users.xml
   def index
@@ -79,7 +79,22 @@ class UsersController < ApplicationController
     end
   end
 
+  def activate
+    if params[:id] && params[:tag]
+      @user = User.find(params[:id])
+      if @user.activate!(params[:tag])
+        # success!
+      else
+        render :status => 401 # wrong activation tag
+      end
+    else
+      redirect_to root_url
+    end
+  end
+
   def login
+    redirect_to :action => "new" if params[:user].nil?
+    @user = User.find_by_email(params[:user][:email])
   end
 
   private

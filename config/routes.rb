@@ -1,6 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
   map.resources :users,
-    :member => { :login => :post }
+    :member => { :login => :post, :verify => :get }
 
   # The priority is based upon order of creation: first created -> highest priority.
 
