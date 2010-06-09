@@ -27,7 +27,7 @@ class UsersController < ApplicationController
 
     if @user.save
       Emailer.deliver_confirmation(@user)
-      redirect_to(@user, :notice => 'User was successfully created.')
+      render :text => 'Check your email for the confirmation email'
     else
       render :action => "new"
     end
